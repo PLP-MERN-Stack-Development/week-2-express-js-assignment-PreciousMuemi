@@ -1,63 +1,95 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=19924256&assignment_repo_type=AssignmentRepo)
-# Express.js RESTful API Assignment
+In this project, I built a RESTful API using Express.js that fully implements CRUD operations for a product resource. I focused on creating a well-structured server with proper routing, middleware, and comprehensive error handling to ensure robustness and maintainability.
 
-This assignment focuses on building a RESTful API using Express.js, implementing proper routing, middleware, and error handling.
+## What I Did
 
-## Assignment Overview
+I started by setting up an Express.js server that listens on port 3000. I created a root route that welcomes users and directs them to the products API.
 
-You will:
-1. Set up an Express.js server
-2. Create RESTful API routes for a product resource
-3. Implement custom middleware for logging, authentication, and validation
-4. Add comprehensive error handling
-5. Develop advanced features like filtering, pagination, and search
+I designed a `products` resource with fields including `id`, `name`, `description`, `price`, `category`, and `inStock`. I implemented all standard RESTful routes:
 
-## Getting Started
+- `GET /api/products` to list all products, with support for filtering by category, searching by name, and pagination.
+- `GET /api/products/:id` to retrieve a specific product by its unique ID.
+- `POST /api/products` to create a new product with validation.
+- `PUT /api/products/:id` to update an existing product with validation.
+- `DELETE /api/products/:id` to remove a product.
 
-1. Accept the GitHub Classroom assignment invitation
-2. Clone your personal repository that was created by GitHub Classroom
-3. Install dependencies:
-   ```
-   npm install
-   ```
-4. Run the server:
-   ```
-   npm start
-   ```
+## Middleware and Integrations
 
-## Files Included
+To enhance the API, I integrated several middleware components:
 
-- `Week2-Assignment.md`: Detailed assignment instructions
-- `server.js`: Starter Express.js server file
-- `.env.example`: Example environment variables file
+- **Logger Middleware:** Logs every request's method, URL, and timestamp to the console for easy monitoring.
+- **Authentication Middleware:** Secures the API by requiring an API key in the request headers.
+- **Validation Middleware:** Ensures that product data sent in create and update requests meets the required format and types.
+- **Global Error Handler:** Catches and handles errors gracefully, including custom error classes for not found and validation errors, returning meaningful HTTP status codes and messages.
 
-## Requirements
+## Advanced Features
 
-- Node.js (v18 or higher)
-- npm or yarn
-- Postman, Insomnia, or curl for API testing
+I added advanced capabilities to improve usability and performance:
 
-## API Endpoints
+- **Filtering:** Clients can filter products by category using query parameters.
+- **Search:** Products can be searched by name with case-insensitive matching.
+- **Pagination:** Large product lists are paginated to limit response size and improve performance.
+- **Statistics Endpoint:** Provides counts of products grouped by category.
 
-The API will have the following endpoints:
+## What to Expect
 
-- `GET /api/products`: Get all products
-- `GET /api/products/:id`: Get a specific product
-- `POST /api/products`: Create a new product
-- `PUT /api/products/:id`: Update a product
-- `DELETE /api/products/:id`: Delete a product
+When you run the server, you can interact with the API using tools like Postman, Insomnia, or curl. The API requires an API key (`your-secret-key`) sent in the `x-api-key` header for all requests.
 
-## Submission
+The API responds with JSON data and appropriate HTTP status codes. Errors are handled consistently, providing clear messages for invalid requests or missing resources.
 
-Your work will be automatically submitted when you push to your GitHub Classroom repository. Make sure to:
+## How to Run
 
-1. Complete all the required API endpoints
-2. Implement the middleware and error handling
-3. Document your API in the README.md
-4. Include examples of requests and responses
+1. Clone your repository.
+2. Install dependencies with `npm install`.
+3. Start the server using `npm start`.
+4. Use your preferred API client to send requests to `http://localhost:3000/api/products`.
+
+## Examples
+
+### Get all products
+
+```
+GET /api/products
+Headers:
+  x-api-key: your-secret-key
+```
+
+### Create a new product
+
+```
+POST /api/products
+Headers:
+  x-api-key: your-secret-key
+Body (JSON):
+{
+  "name": "New Product",
+  "description": "Product description",
+  "price": 100,
+  "category": "electronics",
+  "inStock": true
+}
+```
+
+### Error response example
+
+```
+GET /api/products/invalid-id
+Headers:
+  x-api-key: your-secret-key
+
+Response:
+Status: 404 Not Found
+Body:
+{
+  "error": "Product not found"
+}
+```
+
+## Final Notes
+
+This project demonstrates my ability to build a robust Express.js API with clean architecture, middleware integration, and error handling. It is ready for deployment and further extension as needed.
 
 ## Resources
 
 - [Express.js Documentation](https://expressjs.com/)
 - [RESTful API Design Best Practices](https://restfulapi.net/)
-- [HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) 
+- [HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)

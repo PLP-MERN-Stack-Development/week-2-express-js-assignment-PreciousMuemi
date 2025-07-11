@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
 const validateProduct = require('../middleware/validateProduct');
+const { NotFoundError } = require('../utils/customErrors');
 
 // Utility to get the in-memory products from app.locals
 const getProducts = (req) => req.app.locals.products;
@@ -33,11 +34,15 @@ router.get('/', (req, res) => {
 });
 
 // 📌 GET /api/products/:id - Get one product by ID
-router.get('/:id', (req, res) => {
-  const products = getProducts(req);
-  const product = products.find(p => p.id === req.params.id);
-  if (!product) return res.status(404).json({ error: 'Product not found' });
-  res.json(product);
+router.get('/:id', (req, res, next) => {
+  try {
+    const products = getProducts(req);
+    const product = products.find(p => p.id === req.params.id);
+    if (!product) throw new NotFoundError('Product not found');
+    res.json(product);
+  } catch (err) {
+    next(err);
+  }
 });
 
 // 📌 POST /api/products - Create a new product
@@ -59,24 +64,32 @@ router.post('/', validateProduct, (req, res) => {
 });
 
 // 📌 PUT /api/products/:id - Update a product
-router.put('/:id', validateProduct, (req, res) => {
-  const products = getProducts(req);
-  const index = products.findIndex(p => p.id === req.params.id);
-  if (index === -1) return res.status(404).json({ error: 'Product not found' });
+router.put('/:id', validateProduct, (req, res, next) => {
+  try {
+    const products = getProducts(req);
+    const index = products.findIndex(p => p.id === req.params.id);
+    if (index === -1) throw new NotFoundError('Product not found');
 
-  const updated = { ...products[index], ...req.body };
-  products[index] = updated;
-  res.json(updated);
+    const updated = { ...products[index], ...req.body };
+    products[index] = updated;
+    res.json(updated);
+  } catch (err) {
+    next(err);
+  }
 });
 
 // 📌 DELETE /api/products/:id - Delete a product
-router.delete('/:id', (req, res) => {
-  const products = getProducts(req);
-  const index = products.findIndex(p => p.id === req.params.id);
-  if (index === -1) return res.status(404).json({ error: 'Product not found' });
+router.delete('/:id', (req, res, next) => {
+  try {
+    const products = getProducts(req);
+    const index = products.findIndex(p => p.id === req.params.id);
+    if (index === -1) throw new NotFoundError('Product not found');
 
-  const deleted = products.splice(index, 1);
-  res.json({ message: 'Product deleted', deleted });
+    const deleted = products.splice(index, 1);
+    res.json({ message: 'Product deleted', deleted });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // 📌 GET /api/products/stats/by-category - Get product count by category
